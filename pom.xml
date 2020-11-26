@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <modules>
-        <module>pip-open-api-common</module>
-        <module>pip-open-api-web</module>
+        <module>springboot-fast-common</module>
+        <module>springboot-fast-web</module>
     </modules>
 
     <parent>
