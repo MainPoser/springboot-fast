@@ -2,10 +2,10 @@ server:
   port: 9999
 spring:
   application:
-    name: pip-open-api
+    name: pip-arcsoft
   cloud:
     config:
-      name: common,pip-open-api
+      name: common,pip-arcsoft
       label: master
       profile: default
       fail-fast: false
@@ -27,4 +27,4 @@ eureka:
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:8761/eureka/
 logging:
-  path: E:/
+  path: /logs
