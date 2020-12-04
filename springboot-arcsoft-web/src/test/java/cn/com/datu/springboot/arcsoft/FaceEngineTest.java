@@ -20,7 +20,7 @@ public class FaceEngineTest {
     public static void main(String[] args) {
 
         //从官网获取
-        String appId = "APP_ID:9YcK4HdNvwirxYFcTj9GheMJg7QjwvTFnArPocZR8wPv";
+        String appId = "9YcK4HdNvwirxYFcTj9GheMJg7QjwvTFnArPocZR8wPv";
         String sdkKey = "CMMvpewfabTZRQxs6zWLH62hA5RMNexhC89iirPGVWF4";
 
 
@@ -66,7 +66,7 @@ public class FaceEngineTest {
 
 
         //人脸检测
-        ImageInfo imageInfo = getRGBData(new File("d:\\aaa.jpg"));
+        ImageInfo imageInfo = getRGBData(new File("E:\\code\\java\\ArcSoft_ArcFace_Java_Windows_x64_V3.0\\masik.jpg"));
         List<FaceInfo> faceInfoList = new ArrayList<FaceInfo>();
         errorCode = faceEngine.detectFaces(imageInfo.getImageData(), imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getImageFormat(), faceInfoList);
         System.out.println(faceInfoList);
