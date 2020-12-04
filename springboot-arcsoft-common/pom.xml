@@ -14,11 +14,11 @@
     <dependencies>
 <!--        mybatis-->
         <!-- mybatis的orm插件 -->
-        <dependency>
+        <!--<dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.2.0</version>
-        </dependency>
+        </dependency>-->
         <!--        springWeb容器，内置一些工具依赖,jsonFormat注解等-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

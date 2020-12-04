@@ -1,9 +1,9 @@
 package cn.com.datu.springboot.arcsoft.controller;
 
 
-import cn.com.datu.api.bean.ApiResponse;
-import cn.com.datu.open.api.common.constant.ConstantBusinessType;
-import cn.com.datu.open.api.common.constant.ConstantOperatorType;
+import cn.com.datu.springboot.arcsoft.common.constant.ConstantBusinessType;
+import cn.com.datu.springboot.arcsoft.common.constant.ConstantOperatorType;
+import cn.com.datu.springboot.arcsoft.common.entity.ApiResponse;
 import cn.com.datu.springboot.arcsoft.service.IArcSoftService;
 import cn.com.datu.springboot.arcsoft.vo.DetectFacesReqVo;
 import cn.com.datu.springboot.arcsoft.vo.ExtractFaceFeatureReqVo;
@@ -24,7 +24,7 @@ import java.util.List;
 @Api("arcSoft Api")
 @RestController
 @CrossOrigin
-@RequestMapping("api/rest/v1/ArcSoft")
+@RequestMapping("api/rest/v1/arcSoft")
 @Slf4j
 public class ArcSoftController {
     @Autowired
@@ -36,7 +36,7 @@ public class ArcSoftController {
      * @return
      */
     @ApiOperation(value = "检测人脸信息,该功能依赖初始化的模式选择，VIDEO模式下使用的是人脸追踪功能，IMAGE模式下使用的是人脸检测功能。初始化中detectFaceOrientPriority、detectFaceScaleVal、detectFaceMaxNum参数的设置，对能否检测到人脸以及检测到几张人脸都有决定性的作用", notes = ConstantOperatorType.MANAGE,produces = ConstantBusinessType.SELECT)
-    @GetMapping("/detectFaces")
+    @PostMapping("/detectFaces")
     public ApiResponse<List<FaceInfo>> detectFaces(@Validated @RequestBody DetectFacesReqVo detectFacesReqVo) {
         return ApiResponse.ok(arcSoftService.detectFaces(detectFacesReqVo));
     }
@@ -46,7 +46,7 @@ public class ArcSoftController {
      * @return
      */
     @ApiOperation(value = "人脸特征提取", notes = ConstantOperatorType.MANAGE,produces = ConstantBusinessType.SELECT)
-    @GetMapping("/extractFaceFeature")
+    @PostMapping("/extractFaceFeature")
     public ApiResponse<FaceFeature> extractFaceFeature(@Validated @RequestBody ExtractFaceFeatureReqVo extractFaceFeatureReqVo) {
         return ApiResponse.ok(arcSoftService.extractFaceFeature(extractFaceFeatureReqVo));
     }

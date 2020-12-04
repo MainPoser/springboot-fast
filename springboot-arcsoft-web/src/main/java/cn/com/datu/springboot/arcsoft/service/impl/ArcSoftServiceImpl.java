@@ -1,5 +1,7 @@
 package cn.com.datu.springboot.arcsoft.service.impl;
 
+import cn.com.datu.springboot.arcsoft.common.constant.ConstantImage;
+import cn.com.datu.springboot.arcsoft.common.util.Base64Utils;
 import cn.com.datu.springboot.arcsoft.service.IArcSoftService;
 import cn.com.datu.springboot.arcsoft.vo.DetectFacesReqVo;
 import cn.com.datu.springboot.arcsoft.vo.ExtractFaceFeatureReqVo;
@@ -8,13 +10,11 @@ import com.arcsoft.face.FaceEngine;
 import com.arcsoft.face.FaceFeature;
 import com.arcsoft.face.FaceInfo;
 import com.arcsoft.face.enums.ErrorInfo;
-import com.arcsoft.face.enums.ImageFormat;
 import com.arcsoft.face.toolkit.ImageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -33,7 +33,7 @@ public class ArcSoftServiceImpl implements IArcSoftService {
     @Override
     public List<FaceInfo> detectFaces(DetectFacesReqVo detectFacesReqVo) {
         List<FaceInfo> faceInfoList = new ArrayList<>();
-        byte[] decodeImageData = Base64.getDecoder().decode(detectFacesReqVo.getImgBase64());
+        byte[] decodeImageData = Base64Utils.base64StrToBytes(detectFacesReqVo.getImgBase64().replace(ConstantImage.BASE64_PREX, ""));
         ImageInfo imageInfo = getRGBData(decodeImageData);
         int errorCode = faceEngine.detectFaces(imageInfo.getImageData(), imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getImageFormat(), faceInfoList);
         if (errorCode != ErrorInfo.MOK.getValue()) {
@@ -46,7 +46,7 @@ public class ArcSoftServiceImpl implements IArcSoftService {
     @Override
     public FaceFeature extractFaceFeature(ExtractFaceFeatureReqVo extractFaceFeatureReqVo) {
         FaceFeature faceFeature = new FaceFeature();
-        byte[] decodeImageData = Base64.getDecoder().decode(extractFaceFeatureReqVo.getImgBase64());
+        byte[] decodeImageData = Base64Utils.base64StrToBytes(extractFaceFeatureReqVo.getImgBase64().replace(ConstantImage.BASE64_PREX, ""));
         ImageInfo imageInfo = getRGBData(decodeImageData);
         //获取人脸信息
         DetectFacesReqVo detectFacesReqVo = new DetectFacesReqVo();

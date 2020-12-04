@@ -1,5 +1,6 @@
 package cn.com.datu.springboot.arcsoft.config;
 
+import cn.com.datu.springboot.arcsoft.common.enums.SysType;
 import com.arcsoft.face.ActiveFileInfo;
 import com.arcsoft.face.EngineConfiguration;
 import com.arcsoft.face.FaceEngine;
@@ -24,6 +25,8 @@ public class ArchConfiguration {
     private String appId;
     @Value("${spring.archSoft.faceEngine.sdkKey}")
     private String sdkKey;
+    @Value("${spring.archSoft.faceEngine.sysType}")
+    private String sysType;
     /**
      * ASF_DETECT_MODE_VIDEO  VIDEO模式
      * ASF_DETECT_MODE_IMAGE  IMAGE模式
@@ -105,8 +108,15 @@ public class ArchConfiguration {
     }
 
     private FaceEngine initFaceEngine() {
+        //默认windows
+        String libPath = SysType.WIN64.name();
+        for (SysType sysTypeEnum : SysType.values()) {
+            if (sysType.equals(sysTypeEnum.name())){
+                libPath = sysType;
+            }
+        }
         //获取认证文件
-        String path = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("")).getPath();
+        String path = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("")).getPath()+libPath;
         FaceEngine faceEngine = new FaceEngine(path);
         //激活引擎
         int errorCode = faceEngine.activeOnline(appId, sdkKey);
