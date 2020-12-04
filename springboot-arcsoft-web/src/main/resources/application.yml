@@ -1,0 +1,18 @@
+spring:
+  archSoft:
+    faceEngine:
+      appId: 9YcK4HdNvwirxYFcTj9GheMJg7QjwvTFnArPocZR8wPv
+      sdkKey: CMMvpewfabTZRQxs6zWLH62h1xrAbfmAeKyEVrH4jZfR
+    engineConfiguration:
+      detectMode: ASF_DETECT_MODE_IMAGE
+      detectOrient: ASF_OP_ALL_OUT
+      detectFaceMaxNum: 10
+      detectFaceScaleVal: 16
+        functionConfiguration:
+          supportAge: true
+          supportFace3dAngle: true
+          supportFaceDetect: true
+          supportFaceRecognition: true
+          supportGender: true
+          supportLiveness: true
+          supportIRLiveness: true

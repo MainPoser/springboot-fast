@@ -2,12 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <modules>
-        <module>springboot-fast-common</module>
-        <module>springboot-fast-web</module>
-    </modules>
-
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -16,12 +10,19 @@
         <version>2.0.3.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <modules>
+        <module>springboot-arcsoft-common</module>
+        <module>springboot-arcsoft-web</module>
+    </modules>
+
+
     <version>2.0.1-AFR-GA2-SNAPSHOT</version>
-    <artifactId>springboot-fast</artifactId>
+    <artifactId>springboot-arcsoft</artifactId>
     <groupId>cn.com.datu</groupId>
     <packaging>pom</packaging>
-    <name>springboot-fast</name>
-    <description>北向接口模块</description>
+    <name>springboot-arcsoft</name>
+    <description>虹软对接</description>
 
 
 </project>
