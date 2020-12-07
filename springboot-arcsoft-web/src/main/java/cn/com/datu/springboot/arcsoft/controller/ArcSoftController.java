@@ -5,10 +5,12 @@ import cn.com.datu.springboot.arcsoft.common.constant.ConstantBusinessType;
 import cn.com.datu.springboot.arcsoft.common.constant.ConstantOperatorType;
 import cn.com.datu.springboot.arcsoft.common.entity.ApiResponse;
 import cn.com.datu.springboot.arcsoft.service.IArcSoftService;
+import cn.com.datu.springboot.arcsoft.vo.CompareFaceFeatureReqVo;
 import cn.com.datu.springboot.arcsoft.vo.DetectFacesReqVo;
 import cn.com.datu.springboot.arcsoft.vo.ExtractFaceFeatureReqVo;
 import com.arcsoft.face.FaceFeature;
 import com.arcsoft.face.FaceInfo;
+import com.arcsoft.face.FaceSimilar;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +51,16 @@ public class ArcSoftController {
     @PostMapping("/extractFaceFeature")
     public ApiResponse<FaceFeature> extractFaceFeature(@Validated @RequestBody ExtractFaceFeatureReqVo extractFaceFeatureReqVo) {
         return ApiResponse.ok(arcSoftService.extractFaceFeature(extractFaceFeatureReqVo));
+    }
+    /**
+     * 人脸特征比对
+     * @param compareFaceFeatureReqVo
+     * @return
+     */
+    @ApiOperation(value = "人脸特征提取", notes = ConstantOperatorType.MANAGE,produces = ConstantBusinessType.SELECT)
+    @PostMapping("/compareFaceFeature")
+    public ApiResponse<FaceSimilar> compareFaceFeature(@Validated @RequestBody CompareFaceFeatureReqVo compareFaceFeatureReqVo) {
+        return ApiResponse.ok(arcSoftService.compareFaceFeature(compareFaceFeatureReqVo));
     }
 
 }

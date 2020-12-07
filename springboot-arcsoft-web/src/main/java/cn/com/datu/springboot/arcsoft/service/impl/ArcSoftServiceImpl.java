@@ -2,12 +2,15 @@ package cn.com.datu.springboot.arcsoft.service.impl;
 
 import cn.com.datu.springboot.arcsoft.common.constant.ConstantImage;
 import cn.com.datu.springboot.arcsoft.service.IArcSoftService;
+import cn.com.datu.springboot.arcsoft.vo.CompareFaceFeatureReqVo;
 import cn.com.datu.springboot.arcsoft.vo.DetectFacesReqVo;
 import cn.com.datu.springboot.arcsoft.vo.ExtractFaceFeatureReqVo;
 import com.alibaba.fastjson.JSON;
 import com.arcsoft.face.FaceEngine;
 import com.arcsoft.face.FaceFeature;
 import com.arcsoft.face.FaceInfo;
+import com.arcsoft.face.FaceSimilar;
+import com.arcsoft.face.enums.CompareModel;
 import com.arcsoft.face.enums.ErrorInfo;
 import com.arcsoft.face.toolkit.ImageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -70,5 +73,17 @@ public class ArcSoftServiceImpl implements IArcSoftService {
             throw new UnsupportedOperationException("人脸特征提取失败");
         }
         return faceFeature;
+    }
+
+    @Override
+    public FaceSimilar compareFaceFeature(CompareFaceFeatureReqVo compareFaceFeatureReqVo) {
+        FaceSimilar faceSimilar = new FaceSimilar();
+        //比对
+        int errorCode = faceEngine.compareFaceFeature(compareFaceFeatureReqVo.getFaceFeature1(), compareFaceFeatureReqVo.getFaceFeature2(), CompareModel.ID_PHOTO, faceSimilar);
+        if (errorCode != ErrorInfo.MOK.getValue()) {
+            log.error("人脸特征比对失败,request:<{}>,response:<{}>", JSON.toJSONString(compareFaceFeatureReqVo), errorCode);
+            throw new UnsupportedOperationException("人脸特征比对失败");
+        }
+        return faceSimilar;
     }
 }
