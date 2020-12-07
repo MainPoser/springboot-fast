@@ -15,6 +15,7 @@ import com.arcsoft.face.enums.ErrorInfo;
 import com.arcsoft.face.toolkit.ImageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,7 +80,16 @@ public class ArcSoftServiceImpl implements IArcSoftService {
     public FaceSimilar compareFaceFeature(CompareFaceFeatureReqVo compareFaceFeatureReqVo) {
         FaceSimilar faceSimilar = new FaceSimilar();
         //比对
-        int errorCode = faceEngine.compareFaceFeature(compareFaceFeatureReqVo.getFaceFeature1(), compareFaceFeatureReqVo.getFaceFeature2(), CompareModel.ID_PHOTO, faceSimilar);
+        CompareModel compareModel = CompareModel.ID_PHOTO;
+        if (StringUtils.isNotBlank(compareFaceFeatureReqVo.getCompareModel())){
+            for (CompareModel value : CompareModel.values()) {
+                if (compareFaceFeatureReqVo.getCompareModel().equals(value.name())){
+                    compareModel = value;
+                    break;
+                }
+            }
+        }
+        int errorCode = faceEngine.compareFaceFeature(compareFaceFeatureReqVo.getFaceFeature1(), compareFaceFeatureReqVo.getFaceFeature2(), compareModel, faceSimilar);
         if (errorCode != ErrorInfo.MOK.getValue()) {
             log.error("人脸特征比对失败,request:<{}>,response:<{}>", JSON.toJSONString(compareFaceFeatureReqVo), errorCode);
             throw new UnsupportedOperationException("人脸特征比对失败");
