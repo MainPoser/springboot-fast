@@ -89,6 +89,10 @@ public class ArcSoftServiceImpl implements IArcSoftService {
     @Override
     public ProcessResVo process(ProcessReqVo processReqVo) {
         ProcessResVo processResVo = new ProcessResVo();
+        processResVo.setAge(-1);
+        processResVo.setGender(-1);
+        processResVo.setLiveness(-1);
+        processResVo.setFace3DAngle(new Face3DAngle());
         byte[] decodeImageData = Base64Utils.base64StrToBytes(processReqVo.getImgBase64());
         //提取图片信息
         ImageInfo imageInfo = getRGBData(decodeImageData);
