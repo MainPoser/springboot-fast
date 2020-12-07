@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -34,7 +35,12 @@ public class ArcSoftServiceImpl implements IArcSoftService {
     @Override
     public List<FaceInfo> detectFaces(DetectFacesReqVo detectFacesReqVo) {
         List<FaceInfo> faceInfoList = new ArrayList<>();
-        byte[] decodeImageData = Base64.decodeBase64(detectFacesReqVo.getImgBase64().split(ConstantImage.BASE64_GNU_SED)[1]);
+        byte[] decodeImageData = null;
+        if (detectFacesReqVo.getImgBase64().lastIndexOf(ConstantImage.BASE64_GNU_SED) != -1) {
+            decodeImageData = Base64.decodeBase64(detectFacesReqVo.getImgBase64().split(ConstantImage.BASE64_GNU_SED)[1]);
+        } else {
+            decodeImageData = Base64.decodeBase64(detectFacesReqVo.getImgBase64());
+        }
         ImageInfo imageInfo = getRGBData(decodeImageData);
         int errorCode = faceEngine.detectFaces(imageInfo.getImageData(), imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getImageFormat(), faceInfoList);
         if (errorCode != ErrorInfo.MOK.getValue()) {
@@ -47,7 +53,12 @@ public class ArcSoftServiceImpl implements IArcSoftService {
     @Override
     public FaceFeature extractFaceFeature(ExtractFaceFeatureReqVo extractFaceFeatureReqVo) {
         FaceFeature faceFeature = new FaceFeature();
-        byte[] decodeImageData = Base64.decodeBase64(extractFaceFeatureReqVo.getImgBase64().split(ConstantImage.BASE64_GNU_SED)[1]);
+        byte[] decodeImageData = null;
+        if (extractFaceFeatureReqVo.getImgBase64().lastIndexOf(ConstantImage.BASE64_GNU_SED) != -1) {
+            decodeImageData = Base64.decodeBase64(extractFaceFeatureReqVo.getImgBase64().split(ConstantImage.BASE64_GNU_SED)[1]);
+        } else {
+            decodeImageData = Base64.decodeBase64(extractFaceFeatureReqVo.getImgBase64());
+        }
         ImageInfo imageInfo = getRGBData(decodeImageData);
         //获取人脸信息
         DetectFacesReqVo detectFacesReqVo = new DetectFacesReqVo();
@@ -58,6 +69,6 @@ public class ArcSoftServiceImpl implements IArcSoftService {
             log.error("人脸特征提取失败,request:<{}>,response:<{}>", JSON.toJSONString(extractFaceFeatureReqVo), errorCode);
             throw new UnsupportedOperationException("人脸特征提取失败");
         }
-        return null;
+        return faceFeature;
     }
 }
