@@ -1,6 +1,8 @@
 package cn.com.datu.springboot.arcsoft.common.util;
 
+import cn.com.datu.springboot.arcsoft.common.constant.ConstantImage;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import sun.misc.BASE64Decoder;
 
@@ -12,20 +14,12 @@ import java.io.IOException;
 @Slf4j
 public class Base64Utils {
     public static byte[] base64StrToBytes(String imgBase64) {
-        BASE64Decoder decoder = new BASE64Decoder();
-        byte[] bytes = new byte[0];
-
-        try {
-            bytes = decoder.decodeBuffer(imgBase64);
-        } catch (IOException var4) {
-            log.error("base64StrToBytes:{}", ExceptionUtils.getFullStackTrace(var4));
+        byte[] decodeImageData = null;
+        if (imgBase64.lastIndexOf(ConstantImage.BASE64_GNU_SED) != -1) {
+            decodeImageData = Base64.decodeBase64(imgBase64.split(ConstantImage.BASE64_GNU_SED)[1]);
+        } else {
+            decodeImageData = Base64.decodeBase64(imgBase64);
         }
-        for(int i = 0; i < bytes.length; ++i) {
-            if (bytes[i] < 0) {
-                bytes[i] = (byte)(bytes[i] + 256);
-            }
-        }
-
-        return bytes;
+        return decodeImageData;
     }
 }

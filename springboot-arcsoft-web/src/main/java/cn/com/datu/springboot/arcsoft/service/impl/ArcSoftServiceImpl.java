@@ -1,15 +1,14 @@
 package cn.com.datu.springboot.arcsoft.service.impl;
 
 import cn.com.datu.springboot.arcsoft.common.constant.ConstantImage;
+import cn.com.datu.springboot.arcsoft.common.util.Base64Utils;
 import cn.com.datu.springboot.arcsoft.service.IArcSoftService;
 import cn.com.datu.springboot.arcsoft.vo.CompareFaceFeatureReqVo;
 import cn.com.datu.springboot.arcsoft.vo.DetectFacesReqVo;
 import cn.com.datu.springboot.arcsoft.vo.ExtractFaceFeatureReqVo;
+import cn.com.datu.springboot.arcsoft.vo.ProcessReqVo;
 import com.alibaba.fastjson.JSON;
-import com.arcsoft.face.FaceEngine;
-import com.arcsoft.face.FaceFeature;
-import com.arcsoft.face.FaceInfo;
-import com.arcsoft.face.FaceSimilar;
+import com.arcsoft.face.*;
 import com.arcsoft.face.enums.CompareModel;
 import com.arcsoft.face.enums.ErrorInfo;
 import com.arcsoft.face.toolkit.ImageInfo;
@@ -39,12 +38,7 @@ public class ArcSoftServiceImpl implements IArcSoftService {
     @Override
     public List<FaceInfo> detectFaces(DetectFacesReqVo detectFacesReqVo) {
         List<FaceInfo> faceInfoList = new ArrayList<>();
-        byte[] decodeImageData = null;
-        if (detectFacesReqVo.getImgBase64().lastIndexOf(ConstantImage.BASE64_GNU_SED) != -1) {
-            decodeImageData = Base64.decodeBase64(detectFacesReqVo.getImgBase64().split(ConstantImage.BASE64_GNU_SED)[1]);
-        } else {
-            decodeImageData = Base64.decodeBase64(detectFacesReqVo.getImgBase64());
-        }
+        byte[] decodeImageData = Base64Utils.base64StrToBytes(detectFacesReqVo.getImgBase64());
         ImageInfo imageInfo = getRGBData(decodeImageData);
         int errorCode = faceEngine.detectFaces(imageInfo.getImageData(), imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getImageFormat(), faceInfoList);
         if (errorCode != ErrorInfo.MOK.getValue()) {
@@ -57,12 +51,7 @@ public class ArcSoftServiceImpl implements IArcSoftService {
     @Override
     public FaceFeature extractFaceFeature(ExtractFaceFeatureReqVo extractFaceFeatureReqVo) {
         FaceFeature faceFeature = new FaceFeature();
-        byte[] decodeImageData = null;
-        if (extractFaceFeatureReqVo.getImgBase64().lastIndexOf(ConstantImage.BASE64_GNU_SED) != -1) {
-            decodeImageData = Base64.decodeBase64(extractFaceFeatureReqVo.getImgBase64().split(ConstantImage.BASE64_GNU_SED)[1]);
-        } else {
-            decodeImageData = Base64.decodeBase64(extractFaceFeatureReqVo.getImgBase64());
-        }
+        byte[] decodeImageData = Base64Utils.base64StrToBytes(extractFaceFeatureReqVo.getImgBase64());
         ImageInfo imageInfo = getRGBData(decodeImageData);
         //获取人脸信息
         DetectFacesReqVo detectFacesReqVo = new DetectFacesReqVo();
@@ -96,4 +85,58 @@ public class ArcSoftServiceImpl implements IArcSoftService {
         }
         return faceSimilar;
     }
+
+    @Override
+    public Object process(ProcessReqVo processReqVo) {
+        byte[] decodeImageData = Base64Utils.base64StrToBytes(processReqVo.getImgBase64());
+        //提取图片信息
+        ImageInfo imageInfo = getRGBData(decodeImageData);
+        //提取图片人脸信息
+        DetectFacesReqVo detectFacesReqVo = new DetectFacesReqVo();
+        detectFacesReqVo.setImgBase64(processReqVo.getImgBase64());
+        List<FaceInfo> faceInfos = detectFaces(detectFacesReqVo);
+        //设置检查配置
+        FunctionConfiguration configuration = new FunctionConfiguration();
+        configuration.setSupportAge(true);
+        configuration.setSupportFace3dAngle(true);
+        configuration.setSupportGender(true);
+        configuration.setSupportLiveness(true);
+        int errorCode = faceEngine.process(decodeImageData, imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getImageFormat(), faceInfos, configuration);
+        if (errorCode != ErrorInfo.MOK.getValue()) {
+            log.error("人脸属性检测失败,request:<{}>,response:<{}>", JSON.toJSONString(processReqVo), errorCode);
+            throw new UnsupportedOperationException("人脸属性检测失败");
+        }
+        List<AgeInfo> ageInfoList = new ArrayList<>();
+        errorCode = faceEngine.getAge(ageInfoList);
+        if (errorCode != ErrorInfo.MOK.getValue()) {
+            log.error("获取人脸年龄失败,request:<{}>,response:<{}>", JSON.toJSONString(processReqVo), errorCode);
+            throw new UnsupportedOperationException("获取人脸年龄失败");
+        }
+        //性别检测
+        List<GenderInfo> genderInfoList = new ArrayList<>();
+        errorCode = faceEngine.getGender(genderInfoList);
+        if (errorCode != ErrorInfo.MOK.getValue()) {
+            log.error("获取人脸性别失败,request:<{}>,response:<{}>", JSON.toJSONString(processReqVo), errorCode);
+            throw new UnsupportedOperationException("获取人脸性别失败");
+        }
+        List<Face3DAngle> face3DAngleList = new ArrayList<>();
+        errorCode = faceEngine.getFace3DAngle(face3DAngleList);
+        if (errorCode != ErrorInfo.MOK.getValue()) {
+            log.error("获取人脸3D角度失败,request:<{}>,response:<{}>", JSON.toJSONString(processReqVo), errorCode);
+            throw new UnsupportedOperationException("获取人脸3D角度失败");
+        }
+        //活体检测
+        List<LivenessInfo> livenessInfoList = new ArrayList<LivenessInfo>();
+        errorCode = faceEngine.getLiveness(livenessInfoList);
+        if (errorCode != ErrorInfo.MOK.getValue()) {
+            log.error("获取活体检测失败,request:<{}>,response:<{}>", JSON.toJSONString(processReqVo), errorCode);
+            throw new UnsupportedOperationException("获取活体检测失败");
+        }
+        log.info("年龄：<{}>",ageInfoList.get(0).getAge());
+        log.info("性别：<{}>",genderInfoList.get(0).getGender());
+        log.info("3D角度：<{}>,<{}>,<{}>",face3DAngleList.get(0).getPitch(),face3DAngleList.get(0).getRoll(),face3DAngleList.get(0).getYaw());
+        log.info("活体：<{}>,",livenessInfoList.get(0).getLiveness());
+        return null;
+    }
+
 }

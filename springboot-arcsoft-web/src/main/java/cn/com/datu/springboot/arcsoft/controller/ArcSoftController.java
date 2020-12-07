@@ -8,6 +8,7 @@ import cn.com.datu.springboot.arcsoft.service.IArcSoftService;
 import cn.com.datu.springboot.arcsoft.vo.CompareFaceFeatureReqVo;
 import cn.com.datu.springboot.arcsoft.vo.DetectFacesReqVo;
 import cn.com.datu.springboot.arcsoft.vo.ExtractFaceFeatureReqVo;
+import cn.com.datu.springboot.arcsoft.vo.ProcessReqVo;
 import com.arcsoft.face.FaceFeature;
 import com.arcsoft.face.FaceInfo;
 import com.arcsoft.face.FaceSimilar;
@@ -61,6 +62,16 @@ public class ArcSoftController {
     @PostMapping("/compareFaceFeature")
     public ApiResponse<FaceSimilar> compareFaceFeature(@Validated @RequestBody CompareFaceFeatureReqVo compareFaceFeatureReqVo) {
         return ApiResponse.ok(arcSoftService.compareFaceFeature(compareFaceFeatureReqVo));
+    }
+    /**
+     * 人脸属性检测
+     * @param processReqVo
+     * @return
+     */
+    @ApiOperation(value = "人脸属性检测", notes = ConstantOperatorType.MANAGE,produces = ConstantBusinessType.SELECT)
+    @PostMapping("/process")
+    public ApiResponse<Object> process(@Validated @RequestBody ProcessReqVo processReqVo) {
+        return ApiResponse.ok(arcSoftService.process(processReqVo));
     }
 
 }
