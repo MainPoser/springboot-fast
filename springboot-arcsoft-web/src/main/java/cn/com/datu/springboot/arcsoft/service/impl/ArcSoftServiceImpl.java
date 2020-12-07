@@ -5,10 +5,7 @@ import cn.com.datu.springboot.arcsoft.common.util.Base64Utils;
 import cn.com.datu.springboot.arcsoft.model.enums.IrLiveness;
 import cn.com.datu.springboot.arcsoft.model.enums.PersonSex;
 import cn.com.datu.springboot.arcsoft.service.IArcSoftService;
-import cn.com.datu.springboot.arcsoft.vo.CompareFaceFeatureReqVo;
-import cn.com.datu.springboot.arcsoft.vo.DetectFacesReqVo;
-import cn.com.datu.springboot.arcsoft.vo.ExtractFaceFeatureReqVo;
-import cn.com.datu.springboot.arcsoft.vo.ProcessReqVo;
+import cn.com.datu.springboot.arcsoft.vo.*;
 import com.alibaba.fastjson.JSON;
 import com.arcsoft.face.*;
 import com.arcsoft.face.enums.CompareModel;
@@ -16,6 +13,7 @@ import com.arcsoft.face.enums.ErrorInfo;
 import com.arcsoft.face.toolkit.ImageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,7 +87,8 @@ public class ArcSoftServiceImpl implements IArcSoftService {
     }
 
     @Override
-    public Object process(ProcessReqVo processReqVo) {
+    public ProcessResVo process(ProcessReqVo processReqVo) {
+        ProcessResVo processResVo = new ProcessResVo();
         byte[] decodeImageData = Base64Utils.base64StrToBytes(processReqVo.getImgBase64());
         //提取图片信息
         ImageInfo imageInfo = getRGBData(decodeImageData);
@@ -134,13 +133,29 @@ public class ArcSoftServiceImpl implements IArcSoftService {
             log.error("获取活体检测失败,request:<{}>,response:<{}>", JSON.toJSONString(processReqVo), errorCode);
             throw new UnsupportedOperationException("获取活体检测失败");
         }
-        log.info("年龄：<{}>",ageInfoList.get(0).getAge());
-        String gender = PersonSex.getValueByKey(genderInfoList.get(0).getGender());
-        log.info("性别：<{}>",gender);
-        log.info("3D角度：<{}>,<{}>,<{}>",face3DAngleList.get(0).getPitch(),face3DAngleList.get(0).getRoll(),face3DAngleList.get(0).getYaw());
-        String liveness = IrLiveness.getValueByKey(livenessInfoList.get(0).getLiveness());
-        log.info("活体：<{}>,",liveness);
-        return null;
+        if (CollectionUtils.isNotEmpty(ageInfoList)) {
+            int age = ageInfoList.get(0).getAge();
+            processResVo.setAge(age);
+            log.info("年龄：<{}>",age);
+        }
+        if (CollectionUtils.isNotEmpty(genderInfoList)) {
+            int gender = genderInfoList.get(0).getGender();
+            String genderString = PersonSex.getValueByKey(gender);
+            processResVo.setGender(gender);
+            log.info("性别：<{}>",genderString);
+        }
+        if (CollectionUtils.isNotEmpty(face3DAngleList)) {
+            Face3DAngle face3DAngle = face3DAngleList.get(0);
+            processResVo.setFace3DAngle(face3DAngle);
+            log.info("3D角度：<{}>,<{}>,<{}>", face3DAngle.getPitch(), face3DAngle.getRoll(), face3DAngle.getYaw());
+        }
+        if (CollectionUtils.isNotEmpty(livenessInfoList)) {
+            int liveness = livenessInfoList.get(0).getLiveness();
+            processResVo.setLiveness(liveness);
+            String livenessString = IrLiveness.getValueByKey(liveness);
+            log.info("活体：<{}>,",livenessString);
+        }
+        return processResVo;
     }
 
 }

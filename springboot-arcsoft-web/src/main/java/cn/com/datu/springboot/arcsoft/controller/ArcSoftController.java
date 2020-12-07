@@ -5,10 +5,7 @@ import cn.com.datu.springboot.arcsoft.common.constant.ConstantBusinessType;
 import cn.com.datu.springboot.arcsoft.common.constant.ConstantOperatorType;
 import cn.com.datu.springboot.arcsoft.common.entity.ApiResponse;
 import cn.com.datu.springboot.arcsoft.service.IArcSoftService;
-import cn.com.datu.springboot.arcsoft.vo.CompareFaceFeatureReqVo;
-import cn.com.datu.springboot.arcsoft.vo.DetectFacesReqVo;
-import cn.com.datu.springboot.arcsoft.vo.ExtractFaceFeatureReqVo;
-import cn.com.datu.springboot.arcsoft.vo.ProcessReqVo;
+import cn.com.datu.springboot.arcsoft.vo.*;
 import com.arcsoft.face.FaceFeature;
 import com.arcsoft.face.FaceInfo;
 import com.arcsoft.face.FaceSimilar;
@@ -70,7 +67,7 @@ public class ArcSoftController {
      */
     @ApiOperation(value = "人脸属性检测", notes = ConstantOperatorType.MANAGE,produces = ConstantBusinessType.SELECT)
     @PostMapping("/process")
-    public ApiResponse<Object> process(@Validated @RequestBody ProcessReqVo processReqVo) {
+    public ApiResponse<ProcessResVo> process(@Validated @RequestBody ProcessReqVo processReqVo) {
         return ApiResponse.ok(arcSoftService.process(processReqVo));
     }
 

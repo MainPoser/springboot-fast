@@ -1,9 +1,6 @@
 package cn.com.datu.springboot.arcsoft.service;
 
-import cn.com.datu.springboot.arcsoft.vo.CompareFaceFeatureReqVo;
-import cn.com.datu.springboot.arcsoft.vo.DetectFacesReqVo;
-import cn.com.datu.springboot.arcsoft.vo.ExtractFaceFeatureReqVo;
-import cn.com.datu.springboot.arcsoft.vo.ProcessReqVo;
+import cn.com.datu.springboot.arcsoft.vo.*;
 import com.arcsoft.face.FaceFeature;
 import com.arcsoft.face.FaceInfo;
 import com.arcsoft.face.FaceSimilar;
@@ -40,5 +37,5 @@ public interface IArcSoftService {
      * @param processReqVo
      * @return
      */
-    Object process(ProcessReqVo processReqVo);
+    ProcessResVo process(ProcessReqVo processReqVo);
 }
