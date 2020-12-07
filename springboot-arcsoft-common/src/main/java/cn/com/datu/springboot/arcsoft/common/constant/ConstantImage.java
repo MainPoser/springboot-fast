@@ -10,4 +10,5 @@ public class ConstantImage {
      * 图片前缀
      */
     public static final String BASE64_PREX = "data:image/png;base64,";
+    public static final String BASE64_GNU_SED = ",";
 }
