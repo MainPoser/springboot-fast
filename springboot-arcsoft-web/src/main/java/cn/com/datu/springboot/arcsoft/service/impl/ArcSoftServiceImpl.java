@@ -2,6 +2,8 @@ package cn.com.datu.springboot.arcsoft.service.impl;
 
 import cn.com.datu.springboot.arcsoft.common.constant.ConstantImage;
 import cn.com.datu.springboot.arcsoft.common.util.Base64Utils;
+import cn.com.datu.springboot.arcsoft.model.enums.IrLiveness;
+import cn.com.datu.springboot.arcsoft.model.enums.PersonSex;
 import cn.com.datu.springboot.arcsoft.service.IArcSoftService;
 import cn.com.datu.springboot.arcsoft.vo.CompareFaceFeatureReqVo;
 import cn.com.datu.springboot.arcsoft.vo.DetectFacesReqVo;
@@ -101,7 +103,7 @@ public class ArcSoftServiceImpl implements IArcSoftService {
         configuration.setSupportFace3dAngle(true);
         configuration.setSupportGender(true);
         configuration.setSupportLiveness(true);
-        int errorCode = faceEngine.process(decodeImageData, imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getImageFormat(), faceInfos, configuration);
+        int errorCode = faceEngine.process(imageInfo.getImageData(), imageInfo.getWidth(), imageInfo.getHeight(), imageInfo.getImageFormat(), faceInfos, configuration);
         if (errorCode != ErrorInfo.MOK.getValue()) {
             log.error("人脸属性检测失败,request:<{}>,response:<{}>", JSON.toJSONString(processReqVo), errorCode);
             throw new UnsupportedOperationException("人脸属性检测失败");
@@ -133,9 +135,11 @@ public class ArcSoftServiceImpl implements IArcSoftService {
             throw new UnsupportedOperationException("获取活体检测失败");
         }
         log.info("年龄：<{}>",ageInfoList.get(0).getAge());
-        log.info("性别：<{}>",genderInfoList.get(0).getGender());
+        String gender = PersonSex.getValueByKey(genderInfoList.get(0).getGender());
+        log.info("性别：<{}>",gender);
         log.info("3D角度：<{}>,<{}>,<{}>",face3DAngleList.get(0).getPitch(),face3DAngleList.get(0).getRoll(),face3DAngleList.get(0).getYaw());
-        log.info("活体：<{}>,",livenessInfoList.get(0).getLiveness());
+        String liveness = IrLiveness.getValueByKey(livenessInfoList.get(0).getLiveness());
+        log.info("活体：<{}>,",liveness);
         return null;
     }
 
