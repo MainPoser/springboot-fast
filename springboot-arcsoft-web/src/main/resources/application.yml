@@ -5,7 +5,7 @@ spring:
     faceEngine:
       appId: 9YcK4HdNvwirxYFcTj9GheMJg7QjwvTFnArPocZR8wPv
       sdkKey: CMMvpewfabTZRQxs6zWLH62hA5RMNexhC89iirPGVWF4
-      sysType: WIN64
+      sysType: ${pom.env}
     engineConfiguration:
       detectMode: ASF_DETECT_MODE_IMAGE
       detectOrient: ASF_OP_ALL_OUT

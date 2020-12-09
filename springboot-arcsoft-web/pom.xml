@@ -29,7 +29,7 @@
             <artifactId>arcsoft-sdk-face</artifactId>
             <version>3.0.0.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/src/main/lib/arcsoft-sdk-face-3.0.0.0.jar</systemPath>
+            <systemPath>${basedir}/src/main/lib/${pom.env}/arcsoft-sdk-face-3.0.0.0.jar</systemPath>
         </dependency>
         <!--        common-->
         <dependency>
@@ -60,7 +60,28 @@
             </exclusions>
         </dependency>
     </dependencies>
-
+    <profiles>
+        <profile>
+            <!-- WIN64环境 -->
+            <id>WIN64</id>
+            <properties>
+                <pom.env>WIN64</pom.env>
+                <pom.libpath>WIN64</pom.libpath>
+            </properties>
+            <activation>
+                <!--默认生效的配置组-->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <!-- WIN64环境 -->
+            <id>LINUX</id>
+            <properties>
+                <pom.env>LINUX</pom.env>
+                <pom.libpath>LINUX</pom.libpath>
+            </properties>
+        </profile>
+    </profiles>
     <build>
         <finalName>${package.name.prefix}-${package.version}-${git.commit.id.abbrev}-${maven.build.timestamp}
         </finalName>
