@@ -75,10 +75,10 @@
         </profile>
         <profile>
             <!-- WIN64环境 -->
-            <id>LINUX</id>
+            <id>LINUX64</id>
             <properties>
-                <pom.env>LINUX</pom.env>
-                <pom.libpath>LINUX</pom.libpath>
+                <pom.env>LINUX64</pom.env>
+                <pom.libpath>LINUX64</pom.libpath>
             </properties>
         </profile>
     </profiles>
