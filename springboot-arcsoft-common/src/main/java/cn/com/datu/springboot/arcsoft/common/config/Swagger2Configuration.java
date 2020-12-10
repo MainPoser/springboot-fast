@@ -1,4 +1,4 @@
-package cn.com.datu.springboot.arcsoft.config;
+package cn.com.datu.springboot.arcsoft.common.config;
 
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Value;
