@@ -6,23 +6,24 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <!-- springboot 版本 -->
+
         <!--<version>2.0.0.M6</version>-->
         <version>2.0.3.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <modules>
-        <module>springboot-arcsoft-common</module>
-        <module>springboot-arcsoft-web</module>
+        <module>springboot-oauth2server-common</module>
+        <module>springboot-oauth2server-web</module>
     </modules>
 
 
     <version>2.0.1-AFR-GA2-SNAPSHOT</version>
-    <artifactId>springboot-arcsoft</artifactId>
+    <artifactId>springboot-oauth2server</artifactId>
     <groupId>cn.com.datu</groupId>
     <packaging>pom</packaging>
-    <name>springboot-arcsoft</name>
-    <description>虹软对接</description>
+    <name>springboot-oauth2server</name>
+    <description>oauth2server</description>
 
 
 </project>
